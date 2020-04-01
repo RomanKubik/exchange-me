@@ -1,17 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion build_versions.compile_sdk
+    buildToolsVersion build_versions.build_tools
 
     defaultConfig {
         applicationId "com.roman.kubik.exchangeme"
-        minSdkVersion 21
-        targetSdkVersion 29
-        versionCode 1
-        versionName "1.0"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode build_versions.app_version_code
+        versionName build_versions.app_version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -23,14 +24,37 @@ android {
         }
     }
 
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.1.0'
-    implementation 'androidx.core:core-ktx:1.2.0'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation deps.kotlin.stdlib
+
+    // AndroidX
+    implementation deps.app_compat
+    implementation deps.material
+    implementation deps.core_ktx
+    implementation deps.lifecycle.runtime
+    implementation deps.lifecycle.viewmodel_ktx
+    implementation deps.lifecycle.livedata_ktx
+    implementation deps.activity.activity_ktx
+    implementation deps.recyclerview
+
+    // Dagger
+    implementation deps.dagger.runtime
+    kapt deps.dagger.compiler
+
+    // Api
+    implementation deps.retrofit.runtime
+    implementation deps.retrofit.gson
+    implementation deps.okhttp_logging_interceptor
+
+    testImplementation deps.junit
+    androidTestImplementation deps.atsl.ext_junit
+    androidTestImplementation deps.espresso.core
 }
