@@ -1,4 +1,4 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
@@ -8,13 +8,11 @@ android {
     buildToolsVersion build_versions.build_tools
 
     defaultConfig {
-        applicationId "com.roman.kubik.exchangeme"
         minSdkVersion build_versions.min_sdk
         targetSdkVersion build_versions.target_sdk
-        versionCode build_versions.app_version_code
-        versionName build_versions.app_version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        consumerProguardFiles 'consumer-rules.pro'
     }
 
     buildTypes {
@@ -25,42 +23,28 @@ android {
     }
 
     compileOptions {
-        targetCompatibility JavaVersion.VERSION_1_8
         sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
-
-    dynamicFeatures = [":exchangerates"]
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // App modules
-    implementation project(":core")
-
     implementation deps.kotlin.stdlib
 
     // AndroidX
+    implementation deps.core_ktx
     implementation deps.app_compat
     implementation deps.fragment.runtime_ktx
-    implementation deps.material
-    implementation deps.core_ktx
-    implementation deps.lifecycle.runtime
-    implementation deps.lifecycle.viewmodel_ktx
-    implementation deps.lifecycle.livedata_ktx
     implementation deps.activity.activity_ktx
-    implementation deps.recyclerview
 
     // Dagger
     implementation deps.dagger.runtime
     kapt deps.dagger.compiler
-
-    // Api
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
-    implementation deps.okhttp_logging_interceptor
 
     // Tests
     testImplementation deps.junit
