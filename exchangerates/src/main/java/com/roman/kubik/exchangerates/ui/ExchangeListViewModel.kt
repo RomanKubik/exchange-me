@@ -5,6 +5,9 @@ import androidx.lifecycle.ViewModel
 import com.roman.kubik.exchangeme.navigation.NavigationService
 import javax.inject.Inject
 
+/**
+ * ViewModel of {@link ExchangeListFragment}
+ */
 class ExchangeListViewModel @Inject constructor(
     private val str: String,
     private val navigationService: NavigationService

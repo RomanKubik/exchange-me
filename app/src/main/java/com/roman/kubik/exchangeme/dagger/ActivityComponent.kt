@@ -6,6 +6,9 @@ import com.roman.kubik.exchangeme.ui.main.MainActivityViewModel
 import dagger.BindsInstance
 import dagger.Component
 
+/**
+ * Activity component
+ */
 @Component(dependencies = [ApplicationComponent::class], modules = [ActivityModule::class])
 @ActivityScope
 interface ActivityComponent {

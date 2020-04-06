@@ -5,6 +5,9 @@ import com.roman.kubik.exchangeme.dagger.FeatureScope
 import com.roman.kubik.exchangerates.ui.ExchangeListViewModel
 import dagger.Component
 
+/**
+ * Component of Exchange List feature
+ */
 @Component(dependencies = [ActivityComponent::class])
 @FeatureScope
 interface ExchangeListComponent {

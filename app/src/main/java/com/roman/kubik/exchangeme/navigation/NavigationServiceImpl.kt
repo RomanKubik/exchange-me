@@ -6,6 +6,9 @@ import androidx.fragment.app.FragmentActivity
 import com.roman.kubik.exchangeme.R
 import javax.inject.Inject
 
+/**
+ * Implementation of {@link NavigationService}
+ */
 class NavigationServiceImpl @Inject constructor(private val activity: FragmentActivity) :
     NavigationService {
 

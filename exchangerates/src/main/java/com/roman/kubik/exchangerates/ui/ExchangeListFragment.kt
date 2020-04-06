@@ -6,6 +6,9 @@ import com.roman.kubik.exchangeme.activityComponent
 import com.roman.kubik.exchangeme.dagger.viewModel
 import com.roman.kubik.exchangerates.dagger.DaggerExchangeListComponent
 
+/**
+ * Fragment to display list of exchange rates
+ */
 class ExchangeListFragment : Fragment() {
 
     private val viewModel by viewModel {

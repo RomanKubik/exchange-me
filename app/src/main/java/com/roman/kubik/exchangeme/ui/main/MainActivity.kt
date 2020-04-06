@@ -7,6 +7,9 @@ import com.roman.kubik.exchangeme.component
 import com.roman.kubik.exchangeme.dagger.DaggerActivityComponent
 import com.roman.kubik.exchangeme.dagger.viewModel
 
+/**
+ * Main activity. Application entry point
+ */
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModel { DaggerActivityComponent.factory().create(component, this).mainActivityViewModel }
