@@ -4,15 +4,16 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-    compileSdkVersion build_versions.compile_sdk
-    buildToolsVersion build_versions.build_tools
+    compileSdkVersion versions.compileSdk
+    buildToolsVersion versions.buildTools
 
     defaultConfig {
-        applicationId "com.roman.kubik.exchangeme"
-        minSdkVersion build_versions.min_sdk
-        targetSdkVersion build_versions.target_sdk
-        versionCode build_versions.app_version_code
-        versionName build_versions.app_version_name
+        minSdkVersion versions.minSdk
+        targetSdkVersion versions.targetSdk
+        versionCode versions.app_versionCode
+        versionName versions.app_versionName
+
+        applicationId names.applicationId
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -37,33 +38,22 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
     // App modules
     implementation project(":core")
 
-    implementation deps.kotlin.stdlib
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
     // AndroidX
-    implementation deps.app_compat
-    implementation deps.fragment.runtime_ktx
-    implementation deps.material
-    implementation deps.core_ktx
-    implementation deps.lifecycle.runtime
-    implementation deps.lifecycle.viewmodel_ktx
-    implementation deps.lifecycle.livedata_ktx
-    implementation deps.activity.activity_ktx
-    implementation deps.recyclerview
+    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
+    implementation "androidx.core:core-ktx:${versions.coreKtx}"
+    implementation "androidx.activity:activity-ktx:$versions.activity"
+    implementation "androidx.fragment:fragment-ktx:$versions.fragment"
 
     // Dagger
-    implementation deps.dagger.runtime
-    kapt deps.dagger.compiler
+    implementation "com.google.dagger:dagger:${versions.dagger}"
+    kapt "com.google.dagger:dagger-compiler:${versions.dagger}"
 
-    // Api
-    implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
-    implementation deps.okhttp_logging_interceptor
-
-    // Tests
-    testImplementation deps.junit
-    androidTestImplementation deps.atsl.ext_junit
-    androidTestImplementation deps.espresso.core
 }

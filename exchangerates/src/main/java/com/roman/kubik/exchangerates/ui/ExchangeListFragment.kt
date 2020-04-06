@@ -12,7 +12,6 @@ class ExchangeListFragment : Fragment() {
         DaggerExchangeListComponent.factory().create(activityComponent).exchangeListViewModel
     }
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
