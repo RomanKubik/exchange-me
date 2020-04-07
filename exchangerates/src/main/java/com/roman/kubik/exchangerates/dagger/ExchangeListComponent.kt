@@ -8,7 +8,7 @@ import dagger.Component
 /**
  * Component of Exchange List feature
  */
-@Component(dependencies = [ActivityComponent::class])
+@Component(dependencies = [ActivityComponent::class], modules = [ExchangeRatesModule::class])
 @FeatureScope
 interface ExchangeListComponent {
 
