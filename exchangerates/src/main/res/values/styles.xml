@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+
+    <style name="AppTheme.CurrencyIcon">
+        <item name="android:layout_width">@dimen/currency_icon</item>
+        <item name="android:layout_height">@dimen/currency_icon</item>
+    </style>
+
+    <style name="TextAppearance.ListTitle.Currency">
+        <item name="android:letterSpacing">-0.32</item>
+    </style>
+
+    <style name="TextAppearance.ListSubtitle.Currency">
+        <item name="android:letterSpacing">-0.154</item>
+    </style>
+
+    <style name="TextInputEditText.Currency.List">
+        <item name="android:letterSpacing">0.38</item>
+        <item name="android:textSize">@dimen/amount_text_size</item>
+        <item name="android:gravity">end</item>
+        <item name="android:importantForAutofill" tools:targetApi="o">no</item>
+    </style>
+
+</resources>
