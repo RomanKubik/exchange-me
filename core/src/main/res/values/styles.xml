@@ -26,10 +26,12 @@
 
     <style name="TextAppearance.ListTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="TextAppearance.ListSubtitle" parent="TextAppearance.MaterialComponents.Subtitle2">
+    <style name="TextAppearance.ListSubtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
         <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TextInputEditText" parent="AppTheme" />

@@ -6,22 +6,24 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.roman.kubik.core.util.CurrencyUtils
 import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.item_currency.view.*
 
-class ExchangeListAdapter : ListAdapter<CurrencyRate, ExchangeListAdapter.ExchangeListViewHolder>(
-    object : DiffUtil.ItemCallback<CurrencyRate>() {
-        override fun areItemsTheSame(oldItem: CurrencyRate, newItem: CurrencyRate): Boolean {
-            return oldItem.currencyName == newItem.currencyName
-        }
+class ExchangeListAdapter :
+    ListAdapter<CurrencyRate, ExchangeListAdapter.ExchangeListViewHolder>(
+        object : DiffUtil.ItemCallback<CurrencyRate>() {
+            override fun areItemsTheSame(oldItem: CurrencyRate, newItem: CurrencyRate): Boolean {
+                return oldItem.currencyName == newItem.currencyName
+            }
 
-        override fun areContentsTheSame(oldItem: CurrencyRate, newItem: CurrencyRate): Boolean {
-            return oldItem.exchangeRate == newItem.exchangeRate
-        }
+            override fun areContentsTheSame(oldItem: CurrencyRate, newItem: CurrencyRate): Boolean {
+                return oldItem.exchangeRate == newItem.exchangeRate
+            }
 
-    }
-) {
+        }
+    ) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExchangeListViewHolder {
         val view =
@@ -37,7 +39,9 @@ class ExchangeListAdapter : ListAdapter<CurrencyRate, ExchangeListAdapter.Exchan
 
         fun bind(currencyRate: CurrencyRate) {
             itemView.currencyTitle.text = currencyRate.currencyName
-            itemView.amount.setText(currencyRate.exchangeRate.toString())
+            itemView.currencyName.setText(CurrencyUtils.getCurrencyName(currencyRate.currencyName))
+            itemView.currencyIcon.setImageResource(CurrencyUtils.getCurrencyFlag(currencyRate.currencyName))
+            itemView.amount.setText(CurrencyUtils.formatDecimal(currencyRate.exchangeRate))
         }
     }
 }

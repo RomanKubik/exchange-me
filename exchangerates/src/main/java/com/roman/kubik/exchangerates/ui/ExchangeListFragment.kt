@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.SimpleItemAnimator
 import com.roman.kubik.exchangeme.activityComponent
 import com.roman.kubik.exchangeme.dagger.viewModel
 import com.roman.kubik.exchangerates.R
@@ -35,6 +36,11 @@ class ExchangeListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        setupRecyclerView()
+    }
+
+    private fun setupRecyclerView() {
+        (listExchangeList.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false;
         listExchangeList.layoutManager = LinearLayoutManager(context)
         listExchangeList.adapter = adapter
         viewModel.rates.observe(
