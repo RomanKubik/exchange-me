@@ -18,12 +18,12 @@ import kotlinx.android.synthetic.main.fragment_exchange_list.*
 /**
  * Fragment to display list of exchange rates
  */
-class ExchangeListFragment : Fragment() {
+class ExchangeListFragment : Fragment(), ExchangeItemCallback {
 
     private val viewModel by viewModel {
         DaggerExchangeListComponent.factory().create(activityComponent).exchangeListViewModel
     }
-    private val adapter = ExchangeListAdapter()
+    private val adapter = ExchangeRatesAdapter(this)
 
 
     override fun onCreateView(
@@ -40,13 +40,22 @@ class ExchangeListFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        (listExchangeList.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false;
+        (listExchangeList.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         listExchangeList.layoutManager = LinearLayoutManager(context)
         listExchangeList.adapter = adapter
         viewModel.rates.observe(
             viewLifecycleOwner,
-            Observer<List<CurrencyRate>>(adapter::submitList)
+            Observer(adapter::submitList)
         )
+    }
+
+    override fun onItemSelected(currencyRate: CurrencyRate) {
+        viewModel.editCurrency(currencyRate)
+        listExchangeList.scrollToPosition(0)
+    }
+
+    override fun onAmountEdited(currencyRate: CurrencyRate, amount: Double) {
+        viewModel.editAmount(currencyRate, amount)
     }
 
 }

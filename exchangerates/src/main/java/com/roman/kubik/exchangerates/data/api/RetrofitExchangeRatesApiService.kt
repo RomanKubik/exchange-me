@@ -16,7 +16,8 @@ class RetrofitExchangeRatesApiService @Inject constructor(private val apiService
             val rates =
                 ExchangeRates(
                     response.body()?.baseCurrency ?: currencyCode,
-                    response.body()?.rates?.map { CurrencyRate(it.key, it.value) } ?: emptyList()
+                    response.body()?.rates ?: emptyMap()
+//                    response.body()?.rates?.map { CurrencyRate(it.key, it.value) } ?: emptyList()
                 )
             Result.Success(rates)
         } else {
