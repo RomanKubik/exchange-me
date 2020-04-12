@@ -1,6 +1,7 @@
 package com.roman.kubik.exchangerates.ui
 
 import android.text.Editable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,42 +60,27 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
         private var watcher: RatesTextWatcher? = null
 
         fun bind(currencyRate: CurrencyRate, callback: ExchangeItemCallback) {
+            itemView.amount.removeTextChangedListener(watcher)
             itemView.currencyTitle.text = currencyRate.currency.code
             itemView.currencyName.setText(CurrencyUtils.getCurrencyName(currencyRate.currency))
             itemView.currencyIcon.setImageResource(CurrencyUtils.getCurrencyFlag(currencyRate.currency))
-            if (shouldUpdateAmount(currencyRate)) {
+            if (!itemView.amount.isFocused) {
                 itemView.amount.setText(CurrencyUtils.formatDecimal(currencyRate.exchangeRate))
             }
-            focusIfNecessary(currencyRate)
 
             itemView.setOnClickListener {
                 itemView.requestFocus()
                 callback.onResponderChanged(currencyRate)
             }
 
-            refreshTextWatcher(currencyRate, callback)
+            watcher = RatesTextWatcher(currencyRate, callback, itemView)
+            itemView.amount.addTextChangedListener(watcher)
 
             itemView.amount.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     callback.onAmountEdited(currencyRate, currencyRate.exchangeRate)
                 }
             }
-        }
-
-        private fun shouldUpdateAmount(currencyRate: CurrencyRate): Boolean {
-            return currencyRate.baseCurrency != currencyRate.currency || itemView.amount.text.isEmpty()
-        }
-
-        private fun focusIfNecessary(currencyRate: CurrencyRate) {
-            if (currencyRate.baseCurrency == currencyRate.currency && !itemView.amount.isFocused) {
-                itemView.amount.requestFocus()
-            }
-        }
-
-        private fun refreshTextWatcher(currencyRate: CurrencyRate, callback: ExchangeItemCallback) {
-            itemView.amount.removeTextChangedListener(watcher)
-            watcher = RatesTextWatcher(currencyRate, callback, itemView)
-            itemView.amount.addTextChangedListener(watcher)
         }
 
         class RatesTextWatcher(
@@ -105,7 +91,7 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
             BaseTextWatcher() {
             override fun afterTextChanged(editable: Editable) {
                 if (view.amount.isFocused) {
-                    callback.onAmountEdited(currencyRate, editable.toString().toDouble())
+                    callback.onAmountEdited(currencyRate, editable.toString().toDoubleOrNull() ?: 0.0)
                 }
             }
         }

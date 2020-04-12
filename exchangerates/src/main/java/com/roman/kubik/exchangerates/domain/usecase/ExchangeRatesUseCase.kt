@@ -7,6 +7,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ExchangeRatesUseCase {
 
-    fun changeResponder(currency: CurrencyRate)
+    fun changeResponder(currency: CurrencyRate, amount: Double)
     fun getRates(currency: Currency, amount: Double): Flow<Result<List<CurrencyRate>>>
 }

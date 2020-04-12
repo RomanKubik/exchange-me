@@ -8,12 +8,8 @@ import com.roman.kubik.core.data.CoroutinesDispatcherProvider
 import com.roman.kubik.core.model.Result
 import com.roman.kubik.currency.Currency
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
-import com.roman.kubik.exchangerates.domain.model.ExchangeRates
-import com.roman.kubik.exchangerates.domain.repository.ExchangeRatesRepository
 import com.roman.kubik.exchangerates.domain.usecase.ExchangeRatesUseCase
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,28 +30,29 @@ class ExchangeListViewModel @Inject constructor(
     val rates: LiveData<List<CurrencyRate>> = ratesLiveData
 
     init {
-        restartFetchExchangeRates()
+        fetchExchangeRates()
     }
 
     fun changeResponder(currencyRate: CurrencyRate) {
+        job?.cancel()
+        exchangeRatesUseCase.changeResponder(currencyRate, baseAmount)
         baseCurrency = currencyRate.currency
         baseAmount = currencyRate.exchangeRate
-        exchangeRatesUseCase.changeResponder(currencyRate)
-        restartFetchExchangeRates()
+        fetchExchangeRates()
     }
 
     fun editAmount(currencyRate: CurrencyRate, amount: Double) {
+        job?.cancel()
         this.baseAmount = amount
         this.baseCurrency = currencyRate.currency
-        restartFetchExchangeRates()
+        fetchExchangeRates()
     }
 
-    private fun restartFetchExchangeRates() {
-        job?.cancel()
+    private fun fetchExchangeRates() {
         job = viewModelScope.launch(coroutinesDispatcherProvider.io) {
             exchangeRatesUseCase.getRates(baseCurrency, baseAmount).collect { result ->
                 if (result is Result.Success) {
-                    ratesLiveData.postValue(result.data)
+                    handleSuccess(result)
                 } else {
                     handleError(result as Result.Error)
                 }
@@ -63,25 +60,9 @@ class ExchangeListViewModel @Inject constructor(
         }
     }
 
-    private fun handleSuccess(result: Result.Success<ExchangeRates>) {
-//        val list = ArrayList<CurrencyRate>()
-//        if (rates.value.isNullOrEmpty()) {
-//            list.add(
-//                0,
-//                CurrencyRate(baseCurrency, result.data.baseCurrency, baseAmount)
-//            )
-//            result.data.rates.forEach { c ->
-//                list.add(CurrencyRate(baseCurrency, c.key, c.value * baseAmount))
-//            }
-//            ratesLiveData.postValue(list)
-//        } else {
-//            rates.value?.forEach { rate ->
-//                val r = result.data.rates[rate.currency]?.times(baseAmount)
-//                    ?: rate.exchangeRate
-//                list.add(CurrencyRate(baseCurrency, rate.currency, r))
-//            }
-//        }
-//        ratesLiveData.postValue(list)
+    private fun handleSuccess(result: Result.Success<List<CurrencyRate>>) {
+        ratesLiveData.postValue(result.data)
+
     }
 
     private fun handleError(error: Result.Error) {

@@ -8,6 +8,7 @@ import com.roman.kubik.exchangerates.domain.repository.ExchangeRatesRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class ExchangeRatesUseCaseImpl @Inject constructor(
@@ -20,9 +21,17 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
 
     private var latestRates = ArrayList<CurrencyRate>()
 
-    override fun changeResponder(currency: CurrencyRate) {
+    override fun changeResponder(currency: CurrencyRate, amount: Double) {
         latestRates.remove(latestRates.find { it.currency == currency.currency })
-        latestRates.add(0, currency)
+        latestRates.add(
+            0,
+            CurrencyRate(
+                currency.baseCurrency,
+                currency.currency,
+                BigDecimal.valueOf(currency.exchangeRate).divide(BigDecimal.valueOf(amount))
+                    .toDouble()
+            )
+        )
     }
 
     override fun getRates(currency: Currency, amount: Double): Flow<Result<List<CurrencyRate>>> =
@@ -52,7 +61,7 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
             }
         } else {
             latestRates.forEach { rate ->
-                val r = result.data.rates[rate.currency] ?: rate.exchangeRate
+                val r = result.data.rates[rate.currency] ?: 1.0
                 list.add(CurrencyRate(baseCurrency, rate.currency, r))
             }
         }
@@ -61,7 +70,11 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
 
     private fun applyMultiplierAmount(amount: Double): List<CurrencyRate> {
         return latestRates.map {
-            CurrencyRate(it.baseCurrency, it.currency, it.exchangeRate * amount)
+            CurrencyRate(
+                it.baseCurrency,
+                it.currency,
+                BigDecimal.valueOf(it.exchangeRate).multiply(BigDecimal.valueOf(amount)).toDouble()
+            )
         }
     }
 
