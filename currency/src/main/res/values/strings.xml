@@ -5,7 +5,7 @@
     <string name="currency_AUD">Australian dollar</string>
     <string name="currency_BGN">Bulgarian lev</string>
     <string name="currency_BRL">Brazilian real</string>
-    <string name="currency_CAD">Canadian dolla</string>
+    <string name="currency_CAD">Canadian dollar</string>
     <string name="currency_CHF">Swiss franc</string>
     <string name="currency_CNY">Chinese Yuan Renminbi</string>
     <string name="currency_CZK">Czech koruna</string>
@@ -28,7 +28,7 @@
     <string name="currency_PLN">Polish zloty</string>
     <string name="currency_RON">Romanian leu</string>
     <string name="currency_RUB">Russian ruble</string>
-    <string name="currency_SEK">Russian ruble</string>
+    <string name="currency_SEK">Swedish Krona</string>
     <string name="currency_SGD">Singapore dollar</string>
     <string name="currency_THB">Thai baht</string>
     <string name="currency_USD">United States dollar</string>
