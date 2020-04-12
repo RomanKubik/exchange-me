@@ -21,20 +21,19 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
 
     private var latestRates = ArrayList<CurrencyRate>()
 
-    override fun changeResponder(currency: CurrencyRate, amount: Double) {
+    override fun changeResponder(currency: CurrencyRate, amount: BigDecimal) {
         latestRates.remove(latestRates.find { it.currency == currency.currency })
         latestRates.add(
             0,
             CurrencyRate(
                 currency.baseCurrency,
                 currency.currency,
-                BigDecimal.valueOf(currency.exchangeRate).divide(BigDecimal.valueOf(amount))
-                    .toDouble()
+                currency.exchangeRate.divide(amount)
             )
         )
     }
 
-    override fun getRates(currency: Currency, amount: Double): Flow<Result<List<CurrencyRate>>> =
+    override fun getRates(currency: Currency, amount: BigDecimal): Flow<Result<List<CurrencyRate>>> =
         flow {
             while (true) {
                 val result = exchangeRatesRepository.getLatestExchangeRates(currency)
@@ -54,26 +53,26 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
         if (latestRates.isEmpty()) {
             list.add(
                 0,
-                CurrencyRate(baseCurrency, baseCurrency, 1.0)
+                CurrencyRate(baseCurrency, baseCurrency, BigDecimal.ONE)
             )
             result.data.rates.forEach { c ->
                 list.add(CurrencyRate(baseCurrency, c.key, c.value))
             }
         } else {
             latestRates.forEach { rate ->
-                val r = result.data.rates[rate.currency] ?: 1.0
+                val r = result.data.rates[rate.currency] ?: BigDecimal.ONE
                 list.add(CurrencyRate(baseCurrency, rate.currency, r))
             }
         }
         latestRates = list
     }
 
-    private fun applyMultiplierAmount(amount: Double): List<CurrencyRate> {
+    private fun applyMultiplierAmount(amount: BigDecimal): List<CurrencyRate> {
         return latestRates.map {
             CurrencyRate(
                 it.baseCurrency,
                 it.currency,
-                BigDecimal.valueOf(it.exchangeRate).multiply(BigDecimal.valueOf(amount)).toDouble()
+                it.exchangeRate.multiply(amount)
             )
         }
     }

@@ -14,6 +14,7 @@ import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.dagger.DaggerExchangeListComponent
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.fragment_exchange_list.*
+import java.math.BigDecimal
 
 /**
  * Fragment to display list of exchange rates
@@ -57,7 +58,7 @@ class ExchangeListFragment : Fragment(), ExchangeItemCallback {
         listExchangeList.scrollToPosition(TOP_ITEM_POSITION)
     }
 
-    override fun onAmountEdited(currencyRate: CurrencyRate, amount: Double) {
+    override fun onAmountEdited(currencyRate: CurrencyRate, amount: BigDecimal) {
         viewModel.editAmount(currencyRate, amount)
     }
 

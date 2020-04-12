@@ -6,6 +6,7 @@ import com.roman.kubik.exchangerates.domain.api.ExchangeRatesApiService
 import com.roman.kubik.exchangerates.domain.model.ExchangeRates
 import java.io.IOException
 import java.lang.IllegalArgumentException
+import java.math.BigDecimal
 import javax.inject.Inject
 
 class RetrofitExchangeRatesApiService @Inject constructor(private val apiService: ExchangeRatesApi) :
@@ -30,11 +31,11 @@ class RetrofitExchangeRatesApiService @Inject constructor(private val apiService
         }
     }
 
-    private fun mapStringToCurrency(rates: Map<String, Double>): Map<Currency, Double> {
-        val map = HashMap<Currency, Double>()
+    private fun mapStringToCurrency(rates: Map<String, Double>): Map<Currency, BigDecimal> {
+        val map = HashMap<Currency, BigDecimal>()
         rates.forEach {
             try {
-                map[Currency.valueOf(it.key)] = it.value
+                map[Currency.valueOf(it.key)] = BigDecimal.valueOf(it.value)
             } catch (exception: IllegalArgumentException) {
                 /* ignore for unknown currencies */
             }

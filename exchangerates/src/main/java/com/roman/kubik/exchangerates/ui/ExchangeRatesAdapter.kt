@@ -12,6 +12,7 @@ import com.roman.kubik.currency.CurrencyUtils
 import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.item_currency.view.*
+import java.math.BigDecimal
 
 class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -65,7 +66,7 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
             itemView.currencyName.setText(CurrencyUtils.getCurrencyName(currencyRate.currency))
             itemView.currencyIcon.setImageResource(CurrencyUtils.getCurrencyFlag(currencyRate.currency))
             if (!itemView.amount.isFocused) {
-                itemView.amount.setText(CurrencyUtils.formatDecimal(currencyRate.exchangeRate))
+                itemView.amount.setText(CurrencyUtils.formatDecimal(currencyRate.exchangeRate.toDouble()))
             }
 
             itemView.setOnClickListener {
@@ -91,7 +92,7 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
             BaseTextWatcher() {
             override fun afterTextChanged(editable: Editable) {
                 if (view.amount.isFocused) {
-                    callback.onAmountEdited(currencyRate, editable.toString().toDoubleOrNull() ?: 0.0)
+                    callback.onAmountEdited(currencyRate, editable.toString().toBigDecimalOrNull() ?: BigDecimal.ZERO)
                 }
             }
         }

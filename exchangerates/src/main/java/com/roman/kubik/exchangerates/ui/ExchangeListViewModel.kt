@@ -12,6 +12,7 @@ import com.roman.kubik.exchangerates.domain.usecase.ExchangeRatesUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import java.math.BigDecimal
 import javax.inject.Inject
 
 /**
@@ -24,7 +25,7 @@ class ExchangeListViewModel @Inject constructor(
 
     private var job: Job? = null
     private var baseCurrency: Currency = Currency.EUR
-    private var baseAmount: Double = 100.0
+    private var baseAmount: BigDecimal = BigDecimal.valueOf(100.0)
 
     private val ratesLiveData: MutableLiveData<List<CurrencyRate>> = MutableLiveData()
     val rates: LiveData<List<CurrencyRate>> = ratesLiveData
@@ -41,7 +42,7 @@ class ExchangeListViewModel @Inject constructor(
         fetchExchangeRates()
     }
 
-    fun editAmount(currencyRate: CurrencyRate, amount: Double) {
+    fun editAmount(currencyRate: CurrencyRate, amount: BigDecimal) {
         job?.cancel()
         this.baseAmount = amount
         this.baseCurrency = currencyRate.currency
