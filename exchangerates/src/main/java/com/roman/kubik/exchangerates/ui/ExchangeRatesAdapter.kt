@@ -1,45 +1,49 @@
 package com.roman.kubik.exchangerates.ui
 
-import android.graphics.Color
 import android.text.Editable
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.roman.kubik.core.util.CurrencyUtils
+import com.roman.kubik.core.ui.util.BaseTextWatcher
+import com.roman.kubik.currency.CurrencyUtils
 import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.item_currency.view.*
-import kotlin.collections.ArrayList
 
 class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    companion object {
+        const val TYPE_ERROR = 0
+        const val TYPE_EXCHANGE_RATE = 1
+    }
+
     private val list = ArrayList<CurrencyRate>()
 
     override fun getItemViewType(position: Int): Int {
-        return if (position == 0) 0 else 1
+        return when (position) {
+            0 -> TYPE_ERROR
+            else -> TYPE_EXCHANGE_RATE
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return if (viewType != 0) {
-            ExchangeHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
-            )
-        } else {
-            WorkAroundViewHolder(
+        return when (viewType) {
+            TYPE_ERROR -> ErrorViewHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.item_workaround, parent, false)
             )
+            else -> ExchangeHolder(
+                LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
+            )
         }
-
     }
 
     override fun getItemCount(): Int = if (list.size == 0) 0 else list.size + 1
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (position != 0)
+        if (getItemViewType(position) == TYPE_EXCHANGE_RATE)
             (holder as ExchangeHolder).bind(list[position - 1], callback)
     }
 
@@ -50,44 +54,26 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
         diffResult.dispatchUpdatesTo(this)
     }
 
-    inner class ExchangeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ExchangeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private var watcher: RatesTextWatcher? = null
+
         fun bind(currencyRate: CurrencyRate, callback: ExchangeItemCallback) {
-            itemView.currencyTitle.text = currencyRate.currency
+            itemView.currencyTitle.text = currencyRate.currency.code
             itemView.currencyName.setText(CurrencyUtils.getCurrencyName(currencyRate.currency))
             itemView.currencyIcon.setImageResource(CurrencyUtils.getCurrencyFlag(currencyRate.currency))
-
-            if (currencyRate.baseCurrency != currencyRate.currency || itemView.amount.text.isEmpty()) {
+            if (shouldUpdateAmount(currencyRate)) {
                 itemView.amount.setText(CurrencyUtils.formatDecimal(currencyRate.exchangeRate))
             }
-
-            if (currencyRate.baseCurrency == currencyRate.currency && !itemView.amount.isFocused) {
-                itemView.amount.requestFocus()
-            }
+            focusIfNecessary(currencyRate)
 
             itemView.setOnClickListener {
                 itemView.requestFocus()
-                callback.onItemSelected(currencyRate)
+                callback.onResponderChanged(currencyRate)
             }
 
-            itemView.amount.addTextChangedListener(object : TextWatcher {
-                override fun afterTextChanged(s: Editable) {
-                    if (itemView.amount.isFocused) {
-                        callback.onAmountEdited(currencyRate, s.toString().toDouble())
-                    }
-                }
+            refreshTextWatcher(currencyRate, callback)
 
-                override fun beforeTextChanged(
-                    s: CharSequence?,
-                    start: Int,
-                    count: Int,
-                    after: Int
-                ) {
-                }
-
-                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                }
-
-            })
             itemView.amount.onFocusChangeListener = View.OnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     callback.onAmountEdited(currencyRate, currencyRate.exchangeRate)
@@ -95,9 +81,37 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
             }
         }
 
+        private fun shouldUpdateAmount(currencyRate: CurrencyRate): Boolean {
+            return currencyRate.baseCurrency != currencyRate.currency || itemView.amount.text.isEmpty()
+        }
+
+        private fun focusIfNecessary(currencyRate: CurrencyRate) {
+            if (currencyRate.baseCurrency == currencyRate.currency && !itemView.amount.isFocused) {
+                itemView.amount.requestFocus()
+            }
+        }
+
+        private fun refreshTextWatcher(currencyRate: CurrencyRate, callback: ExchangeItemCallback) {
+            itemView.amount.removeTextChangedListener(watcher)
+            watcher = RatesTextWatcher(currencyRate, callback, itemView)
+            itemView.amount.addTextChangedListener(watcher)
+        }
+
+        class RatesTextWatcher(
+            private val currencyRate: CurrencyRate,
+            private val callback: ExchangeItemCallback,
+            private val view: View
+        ) :
+            BaseTextWatcher() {
+            override fun afterTextChanged(editable: Editable) {
+                if (view.amount.isFocused) {
+                    callback.onAmountEdited(currencyRate, editable.toString().toDouble())
+                }
+            }
+        }
     }
 
-    class WorkAroundViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
 
     class RatesDiffCallback(
         private val oldList: List<CurrencyRate>,

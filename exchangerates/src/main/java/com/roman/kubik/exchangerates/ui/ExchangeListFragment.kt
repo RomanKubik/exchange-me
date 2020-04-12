@@ -20,11 +20,14 @@ import kotlinx.android.synthetic.main.fragment_exchange_list.*
  */
 class ExchangeListFragment : Fragment(), ExchangeItemCallback {
 
+    companion object {
+        const val TOP_ITEM_POSITION = 0
+    }
+
     private val viewModel by viewModel {
         DaggerExchangeListComponent.factory().create(activityComponent).exchangeListViewModel
     }
     private val adapter = ExchangeRatesAdapter(this)
-
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -49,9 +52,9 @@ class ExchangeListFragment : Fragment(), ExchangeItemCallback {
         )
     }
 
-    override fun onItemSelected(currencyRate: CurrencyRate) {
-        viewModel.editCurrency(currencyRate)
-        listExchangeList.scrollToPosition(0)
+    override fun onResponderChanged(currencyRate: CurrencyRate) {
+        viewModel.changeResponder(currencyRate)
+        listExchangeList.scrollToPosition(TOP_ITEM_POSITION)
     }
 
     override fun onAmountEdited(currencyRate: CurrencyRate, amount: Double) {

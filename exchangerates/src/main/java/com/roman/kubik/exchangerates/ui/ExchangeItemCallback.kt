@@ -4,7 +4,7 @@ import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 
 interface ExchangeItemCallback {
 
-    fun onItemSelected(currencyRate: CurrencyRate)
+    fun onResponderChanged(currencyRate: CurrencyRate)
 
     fun onAmountEdited(currencyRate: CurrencyRate, amount: Double)
 }
