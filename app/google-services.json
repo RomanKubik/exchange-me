@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "892270086941",
+    "firebase_url": "https://exchange-me-12fb0.firebaseio.com",
+    "project_id": "exchange-me-12fb0",
+    "storage_bucket": "exchange-me-12fb0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:892270086941:android:e675fa6de08690293b6ff4",
+        "android_client_info": {
+          "package_name": "com.roman.kubik.exchangeme"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "892270086941-lf00dvr3ihv2i0m84tbtciu2872jpd4a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDXXYqM5Z-oxgRynmcFjcVy-aufsVBs2rY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "892270086941-lf00dvr3ihv2i0m84tbtciu2872jpd4a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

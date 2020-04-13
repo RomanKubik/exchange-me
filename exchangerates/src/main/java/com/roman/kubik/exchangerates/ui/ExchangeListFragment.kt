@@ -14,7 +14,6 @@ import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.dagger.DaggerExchangeListComponent
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.fragment_exchange_list.*
-import java.lang.Exception
 import java.math.BigDecimal
 
 /**

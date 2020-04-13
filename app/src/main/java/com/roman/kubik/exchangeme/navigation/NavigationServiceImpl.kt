@@ -13,8 +13,6 @@ class NavigationServiceImpl @Inject constructor(private val activity: FragmentAc
     NavigationService {
 
     override fun toExchangeList() {
-        Log.d("MyTag", "To exchange list: " + activity.javaClass.simpleName)
-
         val fragment = Class.forName("com.roman.kubik.exchangerates.ui.ExchangeListFragment")
             .getConstructor()
             .newInstance() as Fragment
