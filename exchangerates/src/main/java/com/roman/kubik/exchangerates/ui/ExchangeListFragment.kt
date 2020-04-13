@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.SimpleItemAnimator
 import com.roman.kubik.exchangeme.activityComponent
 import com.roman.kubik.exchangeme.dagger.viewModel
+import com.roman.kubik.exchangeme.ui.base.BaseFragment
+import com.roman.kubik.exchangeme.ui.base.BaseViewModel
 import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.dagger.DaggerExchangeListComponent
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
@@ -19,16 +21,19 @@ import java.math.BigDecimal
 /**
  * Fragment to display list of exchange rates
  */
-class ExchangeListFragment : Fragment(), ExchangeItemCallback {
+class ExchangeListFragment : BaseFragment(), ExchangeItemCallback {
 
     companion object {
         const val TOP_ITEM_POSITION = 0
     }
 
+    private val adapter = ExchangeRatesAdapter(this)
     private val viewModel by viewModel {
         DaggerExchangeListComponent.factory().create(activityComponent).exchangeListViewModel
     }
-    private val adapter = ExchangeRatesAdapter(this)
+    override fun getViewModel(): BaseViewModel {
+        return viewModel
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,

@@ -19,3 +19,6 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Fragments for navigation
+-keep public class * extends com.roman.kubik.exchangeme.ui.base.BaseFragment
