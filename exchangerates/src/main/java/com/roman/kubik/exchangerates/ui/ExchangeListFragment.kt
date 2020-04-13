@@ -14,6 +14,7 @@ import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.dagger.DaggerExchangeListComponent
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.fragment_exchange_list.*
+import java.lang.Exception
 import java.math.BigDecimal
 
 /**
@@ -47,9 +48,11 @@ class ExchangeListFragment : Fragment(), ExchangeItemCallback {
         (listExchangeList.itemAnimator as? SimpleItemAnimator)?.supportsChangeAnimations = false
         listExchangeList.layoutManager = LinearLayoutManager(context)
         listExchangeList.adapter = adapter
-        viewModel.rates.observe(
-            viewLifecycleOwner,
-            Observer(adapter::submitList)
+        viewModel.result.observe(
+            viewLifecycleOwner, Observer {
+                adapter.submitList(it.data)
+                handleError(it.exception, it.data)
+            }
         )
     }
 
@@ -62,4 +65,19 @@ class ExchangeListFragment : Fragment(), ExchangeItemCallback {
         viewModel.editAmount(currencyRate, amount)
     }
 
+    private fun handleError(exception: Exception?, data: List<CurrencyRate>) {
+        if (exception == null) {
+            adapter.submitError(null)
+        } else {
+            if (data.isEmpty()) {
+                adapter.submitError(R.string.error_cant_load_data)
+            } else {
+                val isErrorShown = adapter.isErrorShown()
+                adapter.submitError(R.string.error_outdated_info)
+                if (!isErrorShown) {
+                    listExchangeList.scrollToPosition(TOP_ITEM_POSITION)
+                }
+            }
+        }
+    }
 }

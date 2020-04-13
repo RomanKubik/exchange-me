@@ -8,5 +8,7 @@
 
     <color name="text_primary_dark">#191C1F</color>
     <color name="text_primary_light">#8B959E</color>
+    <color name="color_error">#D00000</color>
+    <color name="color_on_error">#FFFFFF</color>
 
 </resources>

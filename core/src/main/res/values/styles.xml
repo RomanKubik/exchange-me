@@ -14,7 +14,8 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:elevation">@dimen/z_app_bar</item>
+        <item name="android:elevation">@dimen/app_bar_z</item>
+        <item name="contentInsetStart">@dimen/app_bar_content_inset</item>
         <item name="titleTextAppearance">@style/TextAppearance.ToolbarTitle</item>
     </style>
 
@@ -41,5 +42,13 @@
         <item name="android:hint">@string/hint_currency</item>
         <item name="android:inputType">numberDecimal</item>
         <item name="android:minEms">2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextInputEditText.Error" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/color_on_error</item>
+        <item name="android:background">@color/color_error</item>
+        <item name="android:padding">@dimen/default_margin</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

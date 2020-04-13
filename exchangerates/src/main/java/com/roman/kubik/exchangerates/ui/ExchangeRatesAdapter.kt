@@ -1,10 +1,12 @@
 package com.roman.kubik.exchangerates.ui
 
 import android.text.Editable
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
+import androidx.annotation.StringRes
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.roman.kubik.core.ui.util.BaseTextWatcher
@@ -12,6 +14,7 @@ import com.roman.kubik.currency.CurrencyUtils
 import com.roman.kubik.exchangerates.R
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import kotlinx.android.synthetic.main.item_currency.view.*
+import kotlinx.android.synthetic.main.item_error.view.*
 import java.math.BigDecimal
 
 class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
@@ -22,6 +25,8 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
         const val TYPE_EXCHANGE_RATE = 1
     }
 
+    @StringRes
+    private var error: Int? = null
     private val list = ArrayList<CurrencyRate>()
 
     override fun getItemViewType(position: Int): Int {
@@ -34,7 +39,7 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             TYPE_ERROR -> ErrorViewHolder(
-                LayoutInflater.from(parent.context).inflate(R.layout.item_workaround, parent, false)
+                LayoutInflater.from(parent.context).inflate(R.layout.item_error, parent, false)
             )
             else -> ExchangeHolder(
                 LayoutInflater.from(parent.context).inflate(R.layout.item_currency, parent, false)
@@ -42,18 +47,34 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
         }
     }
 
-    override fun getItemCount(): Int = if (list.size == 0) 0 else list.size + 1
+    override fun getItemCount(): Int = list.size + 1
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        if (getItemViewType(position) == TYPE_EXCHANGE_RATE)
-            (holder as ExchangeHolder).bind(list[position - 1], callback)
+        when (getItemViewType(position)) {
+            TYPE_ERROR -> (holder as ErrorViewHolder).bind(error)
+            TYPE_EXCHANGE_RATE -> (holder as ExchangeHolder).bind(list[position - 1], callback)
+        }
     }
 
+    fun submitError(@StringRes error: Int?) {
+        if (this.error != error) {
+            this.error = error
+            notifyItemChanged(0)
+        }
+    }
+
+    fun isErrorShown() = error != null
+
     fun submitList(list: List<CurrencyRate>) {
-        val diffResult = DiffUtil.calculateDiff(RatesDiffCallback(this.list, list))
-        this.list.clear()
-        this.list.addAll(list)
-        diffResult.dispatchUpdatesTo(this)
+        if (this.list.isEmpty()) {
+            this.list.addAll(list)
+            notifyDataSetChanged()
+        } else {
+            val diffResult = DiffUtil.calculateDiff(RatesDiffCallback(this.list, list))
+            this.list.clear()
+            this.list.addAll(list)
+            diffResult.dispatchUpdatesTo(this)
+        }
     }
 
     class ExchangeHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -92,13 +113,36 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
             BaseTextWatcher() {
             override fun afterTextChanged(editable: Editable) {
                 if (view.amount.isFocused) {
-                    callback.onAmountEdited(currencyRate, editable.toString().toBigDecimalOrNull() ?: BigDecimal.ZERO)
+                    callback.onAmountEdited(
+                        currencyRate,
+                        editable.toString().toBigDecimalOrNull() ?: BigDecimal.ZERO
+                    )
                 }
             }
         }
     }
 
-    class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView)
+    class ErrorViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        private val hideLayoutParams = ViewGroup.LayoutParams(0, 0)
+        private val displayLayoutParams = ViewGroup.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT
+        )
+
+        fun bind(@StringRes error: Int?) {
+            if (error == null) {
+                if (itemView.layoutParams != hideLayoutParams) {
+                    itemView.layoutParams = hideLayoutParams
+                }
+            } else {
+                if (itemView.layoutParams != displayLayoutParams) {
+                    itemView.layoutParams = displayLayoutParams
+                    itemView.itemError.setText(error)
+                }
+            }
+        }
+    }
 
     class RatesDiffCallback(
         private val oldList: List<CurrencyRate>,

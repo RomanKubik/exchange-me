@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="default_margin">16dp</dimen>
-    <dimen name="z_app_bar">0dp</dimen>
+    <dimen name="app_bar_content_inset">72dp</dimen>
+    <dimen name="app_bar_z">0dp</dimen>
 </resources>
