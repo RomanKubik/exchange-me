@@ -76,8 +76,13 @@ class ExchangeRatesUseCaseImpl @Inject constructor(
 
     private fun handleError(currency: Currency) {
         synchronized(lockObject) {
-            val target = latestRates.findLast { it.currency == currency } ?: return
-            val multiplier = BigDecimal.ONE.divide(target.exchangeRate, MathContext.DECIMAL32)
+            val targetRate = latestRates.findLast { it.currency == currency }?.exchangeRate ?: return
+            val multiplier =
+                if (targetRate.compareTo(BigDecimal.ZERO) == 0) {
+                    return
+                } else {
+                    BigDecimal.ONE.divide(targetRate, MathContext.DECIMAL32)
+                }
             val list = ArrayList<CurrencyRate>()
             latestRates.forEach { rate ->
                 list.add(

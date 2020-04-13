@@ -1,6 +1,5 @@
 package com.roman.kubik.exchangeme.navigation
 
-import android.util.Log
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import com.roman.kubik.exchangeme.R
@@ -13,7 +12,7 @@ class NavigationServiceImpl @Inject constructor(private val activity: FragmentAc
     NavigationService {
 
     override fun toExchangeList() {
-        val fragment = Class.forName("com.roman.kubik.exchangerates.ui.ExchangeListFragment")
+        val fragment = Class.forName(Screens.EXCHANGE_RATES.className)
             .getConstructor()
             .newInstance() as Fragment
 

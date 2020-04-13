@@ -1,21 +1,16 @@
 package com.roman.kubik.exchangerates.ui
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.roman.kubik.core.data.CoroutinesDispatcherProvider
 import com.roman.kubik.currency.Currency
+import com.roman.kubik.exchangeme.ui.base.BaseViewModel
 import com.roman.kubik.exchangerates.domain.model.CurrencyRate
 import com.roman.kubik.exchangerates.domain.model.CurrencyRatesResult
 import com.roman.kubik.exchangerates.domain.usecase.ExchangeRatesUseCase
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.cancelFutureOnCompletion
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import java.math.BigDecimal
 import javax.inject.Inject
 
@@ -25,7 +20,7 @@ import javax.inject.Inject
 class ExchangeListViewModel @Inject constructor(
     private val exchangeRatesUseCase: ExchangeRatesUseCase,
     private val coroutinesDispatcherProvider: CoroutinesDispatcherProvider
-) : ViewModel() {
+) : BaseViewModel(), LifecycleObserver {
 
     private var job: Job? = null
     private var baseCurrency: Currency = Currency.EUR
@@ -36,6 +31,11 @@ class ExchangeListViewModel @Inject constructor(
 
     init {
         fetchExchangeRates()
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 
     fun changeResponder(currencyRate: CurrencyRate) {

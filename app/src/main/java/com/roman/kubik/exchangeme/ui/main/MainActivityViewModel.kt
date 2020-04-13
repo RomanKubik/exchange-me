@@ -1,17 +1,14 @@
 package com.roman.kubik.exchangeme.ui.main
 
-import androidx.lifecycle.ViewModel
-import com.roman.kubik.exchangeme.navigation.NavigationService
+import com.roman.kubik.exchangeme.ui.base.BaseViewModel
 import javax.inject.Inject
 
 /**
  * ViewModel of {@link MainActivity}
  */
-class MainActivityViewModel @Inject constructor(
-    private val navigationService: NavigationService
-) : ViewModel() {
+class MainActivityViewModel @Inject constructor() : BaseViewModel() {
 
-    fun test() {
+    fun toCurrenciesRates() {
         navigationService.toExchangeList()
     }
 }
