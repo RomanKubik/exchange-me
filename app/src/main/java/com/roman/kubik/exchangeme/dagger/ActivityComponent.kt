@@ -5,6 +5,7 @@ import com.roman.kubik.exchangeme.navigation.NavigationService
 import com.roman.kubik.exchangeme.ui.main.MainActivityViewModel
 import dagger.BindsInstance
 import dagger.Component
+import retrofit2.Retrofit
 
 /**
  * Activity component
@@ -13,8 +14,8 @@ import dagger.Component
 @ActivityScope
 interface ActivityComponent {
 
+    val retrofit: Retrofit
     val navigationService: NavigationService
-    val string: String
     val mainActivityViewModel: MainActivityViewModel
 
     @Component.Factory

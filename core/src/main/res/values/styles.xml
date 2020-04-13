@@ -1,0 +1,54 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
+    </style>
+
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:elevation">@dimen/app_bar_z</item>
+        <item name="contentInsetStart">@dimen/app_bar_content_inset</item>
+        <item name="titleTextAppearance">@style/TextAppearance.ToolbarTitle</item>
+    </style>
+
+    <style name="TextAppearance" parent="AppTheme" />
+
+    <style name="TextAppearance.ToolbarTitle" parent="TextAppearance.MaterialComponents.Headline6">
+        <item name="android:textColor">@color/colorOnPrimary</item>
+    </style>
+
+    <style name="TextAppearance.ListTitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.ListSubtitle" parent="TextAppearance.MaterialComponents.Subtitle1">
+        <item name="android:textColor">@color/text_primary_light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="TextInputEditText" parent="AppTheme" />
+
+    <style name="TextInputEditText.Currency" parent="Widget.AppCompat.EditText">
+        <item name="android:textColor">@color/text_primary_dark</item>
+        <item name="android:hint">@string/hint_currency</item>
+        <item name="android:inputType">numberDecimal</item>
+        <item name="android:minEms">2</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextInputEditText.Error" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/color_on_error</item>
+        <item name="android:background">@color/color_error</item>
+        <item name="android:padding">@dimen/default_margin</item>
+        <item name="android:gravity">center</item>
+    </style>
+</resources>

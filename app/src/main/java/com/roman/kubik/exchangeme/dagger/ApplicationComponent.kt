@@ -3,6 +3,7 @@ package com.roman.kubik.exchangeme.dagger
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import retrofit2.Retrofit
 import javax.inject.Singleton
 
 /**
@@ -12,7 +13,7 @@ import javax.inject.Singleton
 @Component(modules = [ApplicationModule::class])
 interface ApplicationComponent {
 
-    val string: String
+    val retrofit: Retrofit
 
     @Component.Factory
     interface Factory {

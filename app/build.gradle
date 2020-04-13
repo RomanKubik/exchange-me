@@ -16,6 +16,9 @@ android {
         applicationId names.applicationId
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        // url
+        buildConfigField "String", "URL_API_BASE", "\"https://hiring.revolut.codes/api/android/\""
     }
 
     buildTypes {
@@ -45,16 +48,23 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$versions.kotlin"
 
     // AndroidX
-    implementation "androidx.appcompat:appcompat:${versions.appCompat}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel:${versions.lifecycle}"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${versions.lifecycle}"
-    implementation "androidx.core:core-ktx:${versions.coreKtx}"
+    implementation "androidx.appcompat:appcompat:$versions.appCompat"
+    implementation "com.google.android.material:material:$versions.material"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:$versions.lifecycle"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$versions.lifecycle"
+    implementation "androidx.core:core-ktx:$versions.coreKtx"
     implementation "androidx.activity:activity-ktx:$versions.activity"
     implementation "androidx.fragment:fragment-ktx:$versions.fragment"
 
     // Dagger
-    implementation "com.google.dagger:dagger:${versions.dagger}"
-    kapt "com.google.dagger:dagger-compiler:${versions.dagger}"
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+
+    // API
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.okhttp3:logging-interceptor:$versions.okhttp"
+    implementation "com.google.code.gson:gson:$versions.gson"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
