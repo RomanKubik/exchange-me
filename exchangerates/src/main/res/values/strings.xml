@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_exchange_list">Rates</string>
+    <string name="error_outdated_info">There was an error while fetching data.\nCurrency rates may be outdated</string>
+    <string name="error_cant_load_data">Couldn\'t fetch currencies.</string>
+</resources>

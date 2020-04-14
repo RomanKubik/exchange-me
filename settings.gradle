@@ -1,2 +1,5 @@
 rootProject.name='ExchangeMe'
 include ':app'
+include ':core'
+include ':exchangerates'
+include ':currency'
