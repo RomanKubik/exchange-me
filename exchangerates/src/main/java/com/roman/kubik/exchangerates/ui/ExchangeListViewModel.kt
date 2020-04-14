@@ -29,8 +29,14 @@ class ExchangeListViewModel @Inject constructor(
     private val resultLiveData = MutableLiveData<CurrencyRatesResult>()
     val result: LiveData<CurrencyRatesResult> = resultLiveData
 
-    init {
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun startFetching() {
         fetchExchangeRates()
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun stopFetching() {
+        job?.cancel()
     }
 
     override fun onCleared() {

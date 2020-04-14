@@ -46,6 +46,7 @@ class ExchangeListFragment : BaseFragment(), ExchangeItemCallback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         setupRecyclerView()
+        lifecycle.addObserver(viewModel)
     }
 
     private fun setupRecyclerView() {
