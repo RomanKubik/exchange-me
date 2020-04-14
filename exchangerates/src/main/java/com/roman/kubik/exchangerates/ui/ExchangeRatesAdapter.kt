@@ -115,7 +115,7 @@ class ExchangeRatesAdapter(private val callback: ExchangeItemCallback) :
                 if (view.amount.isFocused) {
                     callback.onAmountEdited(
                         currencyRate,
-                        editable.toString().toBigDecimalOrNull() ?: BigDecimal.ZERO
+                        BigDecimal.valueOf(CurrencyUtils.parseDecimal(editable.toString()) ?: 0.0)
                     )
                 }
             }

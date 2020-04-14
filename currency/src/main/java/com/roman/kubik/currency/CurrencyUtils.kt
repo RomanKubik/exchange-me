@@ -6,7 +6,6 @@ import java.text.DecimalFormat
 import com.roman.kubik.currency.Currency.*
 
 
-
 object CurrencyUtils {
 
     private var decimalFormat: DecimalFormat = DecimalFormat("##0.00")
@@ -83,6 +82,10 @@ object CurrencyUtils {
 
     fun formatDecimal(decimal: Double): String {
         return decimalFormat.format(decimal)
+    }
+
+    fun parseDecimal(string: String): Double? {
+        return decimalFormat.parse(string)?.toDouble()
     }
 
     @DrawableRes
